@@ -3,9 +3,13 @@ package com.grass.hellondk;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
+import android.util.Log;
+import android.view.View;
 import android.widget.TextView;
 
 public class MainActivity extends AppCompatActivity {
+
+    private static final String TAG = "helloNdk";
 
     // Used to load the 'native-lib' library on application startup.
     static {
@@ -20,6 +24,14 @@ public class MainActivity extends AppCompatActivity {
         // Example of a call to a native method
         TextView tv = findViewById(R.id.sample_text);
         tv.setText(stringFromJNI() +"\n"+ sayHello());
+
+        findViewById(R.id.new_obj).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Object value = newObj(10);
+                Log.i(TAG, "onClick: value: "+value);
+            }
+        });
     }
 
     /**
@@ -29,4 +41,6 @@ public class MainActivity extends AppCompatActivity {
     public native String stringFromJNI();
 
     public native String sayHello();
+
+    public native Object newObj(int value);
 }

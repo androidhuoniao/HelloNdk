@@ -46,3 +46,26 @@ Java_com_grass_hellondk_MainActivity_sayHello(JNIEnv *env, jobject thiz) {
     std::string hello = "sayHello() is working2";
     return env->NewStringUTF(hello.c_str());
 }
+
+//extern "C"
+//JNIEXPORT jobject JNICALL
+//Java_com_grass_hellondk_MainActivity_testClass(JNIEnv *env, jobject thiz, jint value) {
+//    // TODO: implement testClass()
+//    jclass clazz = env->FindClass("java/lang/Integer");
+//    if (clazz != nullptr) {
+//        jmethodID integerConstructID = env->GetMethodID(clazz, "<init>", "(I)V");
+//        return env->NewObject(clazz, integerConstructID, value);
+//    }
+//    return NULL;
+//}
+
+extern "C"
+JNIEXPORT jobject JNICALL
+Java_com_grass_hellondk_MainActivity_newObj(JNIEnv *env, jobject thiz, jint value) {
+    jclass clazz = env->FindClass("java/lang/Integer");
+    if (clazz != nullptr) {
+        jmethodID integerConstructID = env->GetMethodID(clazz, "<init>", "(I)V");
+        return env->NewObject(clazz, integerConstructID, value);
+    }
+    return NULL;
+}
