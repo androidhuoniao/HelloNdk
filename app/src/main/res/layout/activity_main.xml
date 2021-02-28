@@ -28,4 +28,11 @@
         android:layout_marginTop="10dp"
         android:text="c++调用java函数"
         android:layout_height="70dp"/>
+
+    <Button
+        android:id="@+id/dynamic_register"
+        android:layout_width="match_parent"
+        android:layout_marginTop="10dp"
+        android:text="动态注册函数"
+        android:layout_height="70dp"/>
 </LinearLayout>

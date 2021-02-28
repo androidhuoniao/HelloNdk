@@ -42,6 +42,14 @@ public class MainActivity extends AppCompatActivity {
                 c_call_java();
             }
         });
+
+        findViewById(R.id.dynamic_register).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                text("i am text()");
+                static_text("i am static_text()");
+            }
+        });
     }
 
     public String getAge(String name) {
@@ -59,4 +67,9 @@ public class MainActivity extends AppCompatActivity {
     public native String sayHello();
 
     public native Object newObj(int value);
+
+    // 这两个函数用来学习动态注册
+    public native int text(String message);
+    public static native int static_text(String message);
+
 }

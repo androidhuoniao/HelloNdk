@@ -7,27 +7,7 @@
 #define LOGE(format, ...)  __android_log_print(ANDROID_LOG_ERROR, LOG_TAG, format, ##__VA_ARGS__)
 #define LOGI(format, ...)  __android_log_print(ANDROID_LOG_INFO,  LOG_TAG, format, ##__VA_ARGS__)
 #define LOGW(format, ...)  __android_log_print(ANDROID_LOG_WARN, LOG_TAG, format, ##__VA_ARGS__)
-//#define LOGD(...)  __android_log_print(ANDROID_LOG_DEBUG, LOG_TAG, __VA_ARGS__)
-//#define LOGI(...)  __android_log_print(ANDROID_LOG_INFO, LOG_TAG, __VA_ARGS__)
-//#define LOGW(...)  __android_log_print(ANDROID_LOG_WARN, LOG_TAG, __VA_ARGS__)
-//#define LOGE(...)  __android_log_print(ANDROID_LOG_ERROR, LOG_TAG, __VA_ARGS__)
 
-
-JNIEXPORT jint JNICALL JNI_OnLoad(JavaVM *vm, void *reserved) {
-    LOGD("JNI_OnLoad is working");
-    JNIEnv *env = nullptr;
-    LOGI("打印了日志........");
-    if (vm->GetEnv(reinterpret_cast<void **>(&env), JNI_VERSION_1_6) != JNI_OK) {
-        return JNI_ERR;
-    }
-    assert(env != nullptr);
-    //registerNatives -> env->RegisterNatives
-//    if (!registerNatives(env)) {
-//        return JNI_ERR;
-//    }
-
-    return JNI_VERSION_1_6;
-}
 
 extern "C" JNIEXPORT jstring JNICALL
 Java_com_grass_hellondk_MainActivity_stringFromJNI(
@@ -83,3 +63,61 @@ Java_com_grass_hellondk_MainActivity_c_1call_1java(JNIEnv *env, jobject thiz) {
     }
     env->DeleteLocalRef(clazz);
 }
+
+// 测试动态注册函数
+jint native_text(JNIEnv *env, jobject thiz, jstring message) {
+    const char *p_msg = env->GetStringUTFChars(message, JNI_FALSE);
+    LOGI("method = %s, msg = %s", __FUNCTION__, p_msg);
+    return 0;
+}
+
+// 测试动态注册函数
+jint native_static_text(JNIEnv *env, jobject thiz, jstring message) {
+    const char *p_msg = env->GetStringUTFChars(message, JNI_FALSE);
+    LOGI("method = %s, msg = %s", __FUNCTION__, p_msg);
+    return 0;
+}
+
+/*
+ * 要注册的函数列表
+ * 参数：
+ * 1.java中用native关键字声明的函数名
+ * 2.函数签名，格式：(参数类型)返回类型, 可以使用javap -s xx.class查看
+ * 3.C/C++中对应函数的函数名（地址）
+ * */
+static const JNINativeMethod nativeMethods[] = {
+        {"text",        "(Ljava/lang/String;)I", (void *) native_text},
+        {"static_text", "(Ljava/lang/String;)I", (void *) native_static_text}
+};
+
+static int registerNatives(JNIEnv *env) {
+    //要注册的java类的路径(完整的包名和类名)
+    const char *className = "com/grass/hellondk/MainActivity";
+    jclass clazz = nullptr;
+    clazz = env->FindClass(className);
+    if (clazz == nullptr) {
+        return JNI_FALSE;
+    }
+    int methodsCount = sizeof(nativeMethods) / sizeof(nativeMethods[0]);
+    //注册函数 参数：java类名， 要注册的函数数组 ，要注册函数的数量
+    if (env->RegisterNatives(clazz, nativeMethods, methodsCount) < 0) {
+        return JNI_FALSE;
+    }
+    return JNI_TRUE;
+}
+
+JNIEXPORT jint JNICALL JNI_OnLoad(JavaVM *vm, void *reserved) {
+    LOGD("JNI_OnLoad is working");
+    JNIEnv *env = nullptr;
+    LOGI("打印了日志........");
+    if (vm->GetEnv(reinterpret_cast<void **>(&env), JNI_VERSION_1_6) != JNI_OK) {
+        return JNI_ERR;
+    }
+    assert(env != nullptr);
+    if (!registerNatives(env)) {
+        return JNI_ERR;
+    }
+    return JNI_VERSION_1_6;
+}
+
+
