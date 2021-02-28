@@ -16,6 +16,8 @@ public class MainActivity extends AppCompatActivity {
         System.loadLibrary("native-lib");
     }
 
+    public int age = 20;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -32,8 +34,22 @@ public class MainActivity extends AppCompatActivity {
                 Log.i(TAG, "onClick: value: "+value);
             }
         });
+
+        // c++调用java函数
+        findViewById(R.id.c_call_java).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                c_call_java();
+            }
+        });
     }
 
+    public String getAge(String name) {
+        Log.i(TAG, "getAge: "+name);
+        return "Hello " + name + ", I'm java method getAge";
+    }
+
+    public native void c_call_java();
     /**
      * A native method that is implemented by the 'native-lib' native library,
      * which is packaged with this application.

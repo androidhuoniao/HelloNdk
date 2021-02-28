@@ -21,4 +21,11 @@
         android:layout_marginTop="10dp"
         android:text="调用类的构造方法创建一个对象"
         android:layout_height="70dp"/>
+
+    <Button
+        android:id="@+id/c_call_java"
+        android:layout_width="match_parent"
+        android:layout_marginTop="10dp"
+        android:text="c++调用java函数"
+        android:layout_height="70dp"/>
 </LinearLayout>

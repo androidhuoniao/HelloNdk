@@ -47,18 +47,6 @@ Java_com_grass_hellondk_MainActivity_sayHello(JNIEnv *env, jobject thiz) {
     return env->NewStringUTF(hello.c_str());
 }
 
-//extern "C"
-//JNIEXPORT jobject JNICALL
-//Java_com_grass_hellondk_MainActivity_testClass(JNIEnv *env, jobject thiz, jint value) {
-//    // TODO: implement testClass()
-//    jclass clazz = env->FindClass("java/lang/Integer");
-//    if (clazz != nullptr) {
-//        jmethodID integerConstructID = env->GetMethodID(clazz, "<init>", "(I)V");
-//        return env->NewObject(clazz, integerConstructID, value);
-//    }
-//    return NULL;
-//}
-
 extern "C"
 JNIEXPORT jobject JNICALL
 Java_com_grass_hellondk_MainActivity_newObj(JNIEnv *env, jobject thiz, jint value) {
@@ -68,4 +56,30 @@ Java_com_grass_hellondk_MainActivity_newObj(JNIEnv *env, jobject thiz, jint valu
         return env->NewObject(clazz, integerConstructID, value);
     }
     return NULL;
+}
+
+extern "C"
+JNIEXPORT void JNICALL
+Java_com_grass_hellondk_MainActivity_c_1call_1java(JNIEnv *env, jobject thiz) {
+    // TODO: implement c_call_java()
+    jclass clazz = env->FindClass("com/grass/hellondk/MainActivity");
+    if (clazz != nullptr) {
+        //Access object field
+        jfieldID ageID = env->GetFieldID(clazz, "age", "I");
+        jint ageInt = (jint) env->GetIntField(thiz, ageID);
+
+        //Access object method
+        jmethodID getAgeID = env->GetMethodID(clazz, "getAge", "(Ljava/lang/String;)Ljava/lang/String;");
+        jstring nameStr = env->NewStringUTF("JNI");
+        jstring msgStr = (jstring) env->CallObjectMethod(thiz, getAgeID, nameStr);
+
+        //Use string, convert jstring to char sequence
+        char *name = (char *) env->GetStringUTFChars(nameStr, NULL);
+        char *msg = (char *) env->GetStringUTFChars(msgStr, NULL);
+        LOGI("[c_call_java] message:%s; age:%d", msg, ageInt);
+
+        env->ReleaseStringUTFChars(nameStr, name);
+        env->ReleaseStringUTFChars(msgStr, msg);
+    }
+    env->DeleteLocalRef(clazz);
 }
