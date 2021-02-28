@@ -50,6 +50,20 @@ public class MainActivity extends AppCompatActivity {
                 static_text("i am static_text()");
             }
         });
+
+        findViewById(R.id.hello_array).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                int[] a = {0, 1, 2, 3, 4, 5};
+                for (int i = 0; i < 6; i++) {
+                    Log.i(TAG, "mmm调用前数组数据 "+a[i] + "/");
+                }
+                textArray(a);
+                for (int i = 0; i < 6; i++) {
+                    Log.i(TAG, "mmm调用后数组数据 "+a[i] + "/");
+                }
+            }
+        });
     }
 
     public String getAge(String name) {
@@ -71,5 +85,7 @@ public class MainActivity extends AppCompatActivity {
     // 这两个函数用来学习动态注册
     public native int text(String message);
     public static native int static_text(String message);
+
+    public native void textArray(int[] array);
 
 }

@@ -35,4 +35,11 @@
         android:layout_marginTop="10dp"
         android:text="动态注册函数"
         android:layout_height="70dp"/>
+
+    <Button
+        android:id="@+id/hello_array"
+        android:layout_width="match_parent"
+        android:layout_marginTop="10dp"
+        android:text="数组的使用"
+        android:layout_height="70dp"/>
 </LinearLayout>

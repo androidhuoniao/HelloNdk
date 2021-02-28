@@ -78,6 +78,21 @@ jint native_static_text(JNIEnv *env, jobject thiz, jstring message) {
     return 0;
 }
 
+
+static void native_text_array(JNIEnv *env, jobject jobject1, jintArray array) {
+
+    //获取数组长度
+    jsize length = env->GetArrayLength(array);
+    //获取本地数组
+    jint *native_intaray = env->GetIntArrayElements(array, NULL);
+    //操作本地数组
+    for(int i=0;i<length;i++){
+        native_intaray[i]+=100;
+    }
+    //释放本地数组
+    env->ReleaseIntArrayElements(array,native_intaray,0);
+}
+
 /*
  * 要注册的函数列表
  * 参数：
@@ -87,7 +102,8 @@ jint native_static_text(JNIEnv *env, jobject thiz, jstring message) {
  * */
 static const JNINativeMethod nativeMethods[] = {
         {"text",        "(Ljava/lang/String;)I", (void *) native_text},
-        {"static_text", "(Ljava/lang/String;)I", (void *) native_static_text}
+        {"static_text", "(Ljava/lang/String;)I", (void *) native_static_text},
+        {"textArray", "([I)V", (void *) native_text_array}
 };
 
 static int registerNatives(JNIEnv *env) {
